@@ -55,7 +55,7 @@ namespace BlackJack
                 } else if(list[0] == 'A')
                 {
                     if (sum < 11) sum += 11;
-                    else if (sum > 21) sum -= 10;
+                    if (sum > 21) sum -= 10;
                     else sum += 1;
                 }
             }
