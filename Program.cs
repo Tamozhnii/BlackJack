@@ -10,20 +10,29 @@ namespace BlackJack
     {
         Random random = new Random();
         List<string> cards = new List<string>();
-        string[] mast = new string[4] { " Hearts", " Diamonds", " Spades", " Clubs" };
-        string[] character = new string[13] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K"};
+        string[] mast = new string[4] { " Hearts, ", " Diamonds, ", " Spades, ", " Clubs, " };
+        string[] character = new string[13] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K" };
         List<string> hand = new List<string>();
 
-        public string[] Cards
+        public string Hand
         {
-            set
+            get
             {
-                for (int i = 0; i < mast.Length; i++)
+                string myHand = null;
+                for (int i = 0; i < hand.Count; i++)
                 {
-                    for (int j = 0; j < character.Length; j++)
-                    {
-                        cards.Add(character[j] + mast[i]);
-                    }
+                    myHand += hand[i];
+                }
+                return myHand;
+            }
+        }
+        public BlackJack()
+        {
+            for (int i = 0; i < mast.Length; i++)
+            {
+                for (int j = 0; j < character.Length; j++)
+                {
+                    cards.Add(character[j] + mast[i]);
                 }
             }
         }
@@ -38,25 +47,32 @@ namespace BlackJack
         
         public int Sum()
         {
-            List<char> list;
             int sum = 0;
-            for (int i = 0; i < hand.Count - 1; i++)
+            int cardCost = 0;
+            string card = null;
+            string cost;
+            for (int i = 0; i < hand.Count; i++)
             {
-                list = new List<char>();
-                list.AddRange(hand[i]);
-                int a = 0;
-                int.TryParse(list[0].ToString(), out a);
-                if(a >= 2 || a <= 10)
+                card = hand[i];
+                cost = card[0].ToString() + card[1];
+                int.TryParse(cost, out cardCost);
+                if (cardCost >= 2 || cardCost <= 10)
                 {
-                    sum += a;
-                } else if(list[0] == 'J' || list[0] == 'D' || list[0] == 'k')
+                    sum += cardCost;
+                }
+                if (card[0] == 'J' || card[0] == 'D' || card[0] == 'K')
                 {
                     sum += 10;
-                } else if(list[0] == 'A')
+                } else if (card[0] == 'A')
                 {
-                    if (sum < 11) sum += 11;
-                    if (sum > 21) sum -= 10;
-                    else sum += 1;
+                    sum += 11;
+                }
+            }
+            if(sum > 21)
+            {
+                foreach (string i in hand)
+                {
+                    if (i[0] == 'A') sum -= 10;
                 }
             }
             return sum;
@@ -66,6 +82,14 @@ namespace BlackJack
     {
         static void Main(string[] args)
         {
+            BlackJack myHand = new BlackJack();
+            for (int i = 0; i < 5; i++)
+            {
+                myHand.GetCard();
+            }
+            Console.WriteLine($"Hand {myHand.Hand}it's {myHand.Sum()} point");
+
+            Console.ReadKey();
         }
     }
 }
