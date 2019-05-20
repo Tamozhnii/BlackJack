@@ -10,6 +10,7 @@ namespace BlackJack
     {
         List<string> hand = new List<string>();
         protected int sum = 0;
+        string myHand;
 
         public int Sum
         {
@@ -19,19 +20,23 @@ namespace BlackJack
         {
             get
             {
-                return String.Concat(hand);
+                foreach (string i in hand)
+                {
+                    myHand += i + " ";
+                }
+                return myHand;
             }
         }
 
         public Gamer()
         {
-            hand.Add(CardDeck.GetCard());
-            GetCount();
+            TakeCard();
+            TakeCard();
         }
 
         public void TakeCard()
         {
-            hand.Add(CardDeck.GetCard());
+            hand.Add(BlackJack.TakeCardFromDeck());
             GetCount();
         }
 

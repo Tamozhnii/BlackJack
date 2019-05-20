@@ -10,10 +10,16 @@ namespace BlackJack
     {
         public Dealer()
         {
-            while (sum < 17)
+            TakeCard();
+        }
+
+        public void DealerPlay()
+        {
+            do
             {
                 TakeCard();
-            }
+                GetCount();
+            } while (Sum > 17);
         }
     }
 }
