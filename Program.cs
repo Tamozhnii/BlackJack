@@ -8,87 +8,99 @@ namespace BlackJack
 {
     public class BlackJack
     {
-        Random random = new Random();
-        List<string> cards = new List<string>();
-        string[] mast = new string[4] { " Hearts, ", " Diamonds, ", " Spades, ", " Clubs, " };
-        string[] character = new string[13] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K" };
-        List<string> hand = new List<string>();
-
-        public string Hand
+        public static bool Answer()
         {
-            get
+            bool flag = false;
+            Console.WriteLine("More card?");
+            string y = Console.ReadLine();
+            do
             {
-                string myHand = null;
-                for (int i = 0; i < hand.Count; i++)
+                if (y != "")
                 {
-                    myHand += hand[i];
-                }
-                return myHand;
-            }
+                    switch (y[0])
+                    {
+                        case 'y':
+                        case 'Y':
+                            flag = true;
+                            break;
+                        case 'n':
+                        case 'N':
+                            break;
+                        default:
+                            Console.WriteLine("Deafalt answer, try again");
+                            Answer();
+                            break;
+                    }
+                } else Answer();
+            } while (flag == true);
+            return flag;
+        }
+        public static void ShowHands(Gamer who)
+        {
+            string str = who.GetType() == typeof(Gamer) ? "Your" : "Dealers";
+            Console.WriteLine($"{str} hand: {who.Hand.ToString()}, sum: {who.Sum.ToString()}");
         }
         public BlackJack()
         {
-            for (int i = 0; i < mast.Length; i++)
+            Gamer gamer = new Gamer();
+            ShowHands(gamer);
+            if (gamer.Sum == 21)
             {
-                for (int j = 0; j < character.Length; j++)
+                ShowHands(gamer);
+                Console.WriteLine("Black Jack, You WIN!");
+            }
+            else
+            {
+                while (Answer() == true)
                 {
-                    cards.Add(character[j] + mast[i]);
+                    gamer.TakeCard();
+                    if (gamer.Sum > 21)
+                    {
+                        ShowHands(gamer);
+                        Console.WriteLine("Bust! You lose");
+                    }
+                    else if (gamer.Sum == 21)
+                    {
+                        ShowHands(gamer);
+                        break;
+                    }
+                }
+                Dealer dealer = new Dealer();
+                ShowHands(dealer);
+                if (dealer.Sum > 21)
+                {
+                    ShowHands(gamer);
+                    ShowHands(dealer);
+                    Console.WriteLine("You win!");
+                }
+                else if (dealer.Sum < 21 && dealer.Sum > gamer.Sum)
+                {
+                    ShowHands(gamer);
+                    ShowHands(dealer);
+                    Console.WriteLine("Dealer wins, you lose");
+                } else if(dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+                {
+                    ShowHands(gamer);
+                    ShowHands(dealer);
+                    Console.WriteLine("You Win!");
+                } else
+                {
+                    ShowHands(gamer);
+                    ShowHands(dealer);
+                    Console.WriteLine("Push!");
                 }
             }
-        }
-
-        public List<string> GetCard()
-        {
-            int i = random.Next(0, cards.Count - 1);
-            hand.Add(cards[i]);
-            cards.RemoveAt(i);
-            return hand;
-        }
-        
-        public int Sum()
-        {
-            int sum = 0;
-            int cardCost = 0;
-            string card = null;
-            string cost;
-            for (int i = 0; i < hand.Count; i++)
-            {
-                card = hand[i];
-                cost = card[0].ToString() + card[1];
-                int.TryParse(cost, out cardCost);
-                if (cardCost >= 2 || cardCost <= 10)
-                {
-                    sum += cardCost;
-                }
-                if (card[0] == 'J' || card[0] == 'D' || card[0] == 'K')
-                {
-                    sum += 10;
-                } else if (card[0] == 'A')
-                {
-                    sum += 11;
-                }
-            }
-            if(sum > 21)
-            {
-                foreach (string i in hand)
-                {
-                    if (i[0] == 'A') sum -= 10;
-                }
-            }
-            return sum;
         }
     }
     class Program
     {
         static void Main(string[] args)
         {
-            BlackJack myHand = new BlackJack();
-            for (int i = 0; i < 5; i++)
-            {
-                myHand.GetCard();
-            }
-            Console.WriteLine($"Hand {myHand.Hand}it's {myHand.Sum()} point");
-
+            //BlackJack blackJack = new BlackJack();
+            Dealer dealer = new Dealer();
+            Gamer gamer = new Gamer();
+            Console.WriteLine($"Dealer {dealer.Hand} sum = {dealer.Sum}");
+            Console.WriteLine($"Hand {gamer.Hand} sum = {gamer.Sum}");
             Console.ReadKey();
         }
     }
