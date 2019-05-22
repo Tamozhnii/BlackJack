@@ -11,6 +11,7 @@ namespace BlackJack
         List<string> hand = new List<string>();
         protected int sum = 0;
         string myHand;
+        string card;
 
         public int Sum
         {
@@ -31,7 +32,6 @@ namespace BlackJack
         public Gamer()
         {
             TakeCard();
-            TakeCard();
         }
 
         public void TakeCard()
@@ -42,12 +42,10 @@ namespace BlackJack
 
         public void GetCount()
         {
-            int sum = 0;
-            string card = null;
             for (int i = 0; i < hand.Count; i++)
             {
                 card = hand[i];
-                if (Char.IsDigit(card[0]) && card[0] != '1')
+                if (Char.IsDigit(card[0]) == true && card[0] != '1')
                 {
                     sum += int.Parse(card[0].ToString());
                 }

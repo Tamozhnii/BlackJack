@@ -10,7 +10,6 @@ namespace BlackJack
     {
         public Dealer()
         {
-            TakeCard();
         }
 
         public void DealerPlay()
