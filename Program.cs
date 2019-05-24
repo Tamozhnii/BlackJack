@@ -14,7 +14,7 @@ namespace BlackJack
             do
             {
                 blackJack.Play();
-            } while (blackJack.Answer() == true);
+            } while (blackJack.Answer());
             Console.ReadKey();
         }
     }

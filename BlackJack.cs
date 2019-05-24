@@ -11,7 +11,6 @@ namespace BlackJack
         static CardDeck deck;
         Gamer gamer;
         Dealer dealer;
-        bool flag = true;
 
         public BlackJack() { }
 
@@ -26,11 +25,10 @@ namespace BlackJack
                 {
                     case 'y':
                     case 'Y':
-                        break;
+                        return true;
                     case 'n':
                     case 'N':
-                        flag = false;
-                        break;
+                        return false;
                     default:
                         Console.WriteLine("Deafalt answer, try again");
                         Console.ReadKey();
@@ -38,7 +36,7 @@ namespace BlackJack
                 }
             }
             else Answer();
-            return flag;
+            return false;
         }
         void ShowHands(Gamer who)
         {
@@ -54,10 +52,6 @@ namespace BlackJack
         {
             deck = new CardDeck();
             gamer = new Gamer();
-            dealer = new Dealer();
-            ShowHands(dealer);
-            ShowHands(gamer);
-
             if (gamer.Sum == 21)
             {
                 Console.WriteLine("Black Jack, You WIN!");
@@ -65,54 +59,54 @@ namespace BlackJack
             }
             else
             {
+                bool flag = true;
                 do
                 {
-                    Answer();
-                    if(flag == true)
+                    if(flag)
                     {
                         gamer.TakeCard();
+                        ShowHands(gamer);
                     }
                     if (gamer.Sum > 21)
                     {
-                        ShowHands(gamer);
                         Console.WriteLine("Bust! You lose");
-                        Console.ReadKey();
                         break;
                     }
                     else if (gamer.Sum == 21)
                     {
-                        ShowHands(gamer);
+                        Console.WriteLine("You win!");
                         break;
                     }
-                } while (flag == true);
-                dealer.DealerPlay();
-                if (dealer.Sum > 21)
+                    flag = Answer();
+                } while (flag);
+                if(gamer.Sum < 21)
                 {
-                    ShowHands(gamer);
-                    ShowHands(dealer);
-                    Console.WriteLine("You win!");
-                    Console.ReadKey();
-                }
-                else if (dealer.Sum < 21 && dealer.Sum > gamer.Sum)
-                {
-                    ShowHands(gamer);
-                    ShowHands(dealer);
-                    Console.WriteLine("Dealer wins, you lose");
-                    Console.ReadKey();
-                }
-                else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
-                {
-                    ShowHands(gamer);
-                    ShowHands(dealer);
-                    Console.WriteLine("You Win!");
-                    Console.ReadKey();
-                }
-                else
-                {
-                    ShowHands(gamer);
-                    ShowHands(dealer);
-                    Console.WriteLine("Push!");
-                    Console.ReadKey();
+                    dealer = new Dealer();
+                    dealer.DealerPlay();
+                    if (dealer.Sum > 21)
+                    {
+                        ShowHands(gamer);
+                        ShowHands(dealer);
+                        Console.WriteLine("You win!");
+                    }
+                    else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+                    {
+                        ShowHands(gamer);
+                        ShowHands(dealer);
+                        Console.WriteLine("Dealer wins, you lose");
+                    }
+                    else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+                    {
+                        ShowHands(gamer);
+                        ShowHands(dealer);
+                        Console.WriteLine("You Win!");
+                    }
+                    else
+                    {
+                        ShowHands(gamer);
+                        ShowHands(dealer);
+                        Console.WriteLine("Push!");
+                    }
                 }
             }
         }

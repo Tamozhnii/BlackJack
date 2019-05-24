@@ -18,7 +18,7 @@ namespace BlackJack
             {
                 TakeCard();
                 GetCount();
-            } while (Sum > 17);
+            } while (Sum < 17);
         }
     }
 }

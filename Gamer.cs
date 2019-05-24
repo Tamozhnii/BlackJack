@@ -8,8 +8,8 @@ namespace BlackJack
 {
     public class Gamer
     {
-        List<string> hand = new List<string>();
-        protected int sum = 0;
+        List<string> hand;
+        protected int sum;
         string myHand;
         string card;
 
@@ -21,9 +21,10 @@ namespace BlackJack
         {
             get
             {
-                foreach (string i in hand)
+                myHand = "";
+                foreach (string v in hand)
                 {
-                    myHand += i + " ";
+                    myHand += v + " ";
                 }
                 return myHand;
             }
@@ -31,37 +32,42 @@ namespace BlackJack
 
         public Gamer()
         {
+            sum = 0;
+            hand = new List<string>();
             TakeCard();
         }
 
         public void TakeCard()
         {
             hand.Add(BlackJack.TakeCardFromDeck());
-            GetCount();
+            sum = GetCount();
         }
 
-        public void GetCount()
+        public int GetCount()
         {
+            int sum1 = 0;
             for (int i = 0; i < hand.Count; i++)
             {
                 card = hand[i];
-                if (Char.IsDigit(card[0]) == true && card[0] != '1')
+                if (char.IsDigit(card[0]) is true && card[0] != '1')
                 {
-                    sum += int.Parse(card[0].ToString());
+                    sum1 += int.Parse(card[0].ToString());
                 }
                 else if (card[0] == 'A')
                 {
-                    sum += 11;
+                    sum1 += 11;
                 }
                 else
                 {
-                    sum += 10;
+                    sum1 += 10;
                 }
             }
-            foreach (string i in hand)
+            for (int j = 0; j < hand.Count; j++)
             {
-                if (i[0] == 'A' && sum > 21) sum -= 10;
+                string item = hand[j];
+                if (item[0] == 'A' && sum1 > 21) sum1 -= 10;
             }
+            return sum1;
         }
     }
 }
