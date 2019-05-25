@@ -14,10 +14,10 @@ namespace BlackJack
 
         public BlackJack() { }
 
-        public bool Answer()
+        public void Answer(string question, out bool flag)
         {
             string y = null;
-            Console.WriteLine("More?");
+            Console.WriteLine(question);
             y = Console.ReadLine();
             if (y != "")
             {
@@ -25,18 +25,19 @@ namespace BlackJack
                 {
                     case 'y':
                     case 'Y':
-                        return true;
+                        flag = true;
+                        break;
                     case 'n':
                     case 'N':
-                        return false;
+                        flag = false;
+                        break;
                     default:
                         Console.WriteLine("Deafalt answer, try again");
-                        Console.ReadKey();
+                        Answer(question, out flag);
                         break;
                 }
             }
-            else Answer();
-            return false;
+            else Answer(question, out flag);
         }
         void ShowHands(Gamer who)
         {
@@ -77,7 +78,7 @@ namespace BlackJack
                         Console.WriteLine("You win!");
                         break;
                     }
-                    flag = Answer();
+                    Answer("More card?", out flag);
                 } while (flag);
                 if(gamer.Sum < 21)
                 {

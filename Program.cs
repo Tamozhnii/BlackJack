@@ -11,11 +11,12 @@ namespace BlackJack
         static void Main(string[] args)
         {
             BlackJack blackJack = new BlackJack();
+            bool question;
             do
             {
                 blackJack.Play();
-            } while (blackJack.Answer());
-            Console.ReadKey();
+                blackJack.Answer("Play again?", out question);
+            } while (question);
         }
     }
 }
