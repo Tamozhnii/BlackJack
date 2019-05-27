@@ -53,6 +53,8 @@ namespace BlackJack
         {
             deck = new CardDeck();
             gamer = new Gamer();
+            gamer.TakeCard();
+            ShowHands(gamer);
             if (gamer.Sum == 21)
             {
                 Console.WriteLine("Black Jack, You WIN!");
@@ -60,7 +62,7 @@ namespace BlackJack
             }
             else
             {
-                bool flag = true;
+                bool flag = false;
                 do
                 {
                     if(flag)
@@ -75,36 +77,31 @@ namespace BlackJack
                     }
                     else if (gamer.Sum == 21)
                     {
-                        Console.WriteLine("You win!");
                         break;
                     }
                     Answer("More card?", out flag);
                 } while (flag);
-                if(gamer.Sum < 21)
+                if(gamer.Sum <= 21)
                 {
                     dealer = new Dealer();
                     dealer.DealerPlay();
                     if (dealer.Sum > 21)
                     {
-                        ShowHands(gamer);
                         ShowHands(dealer);
                         Console.WriteLine("You win!");
                     }
                     else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
                     {
-                        ShowHands(gamer);
                         ShowHands(dealer);
                         Console.WriteLine("Dealer wins, you lose");
                     }
                     else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
                     {
-                        ShowHands(gamer);
                         ShowHands(dealer);
                         Console.WriteLine("You Win!");
                     }
                     else
                     {
-                        ShowHands(gamer);
                         ShowHands(dealer);
                         Console.WriteLine("Push!");
                     }
