@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BJDB.cs" />
     <Compile Include="BlackJack.cs" />
     <Compile Include="CardDeck.cs" />
     <Compile Include="Dealer.cs" />
