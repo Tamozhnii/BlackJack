@@ -11,8 +11,12 @@ namespace BlackJack
         static CardDeck deck;
         Gamer gamer;
         Dealer dealer;
-
-        public BlackJack() { }
+        BJDB bd;
+        
+        public BlackJack()
+        {
+            bd = new BJDB();
+        }
 
         public void Answer(string question, out bool flag)
         {

@@ -19,6 +19,7 @@ namespace BlackJack
                 blackJack.Play();
                 blackJack.Answer("Play again?", out question);
             } while (question);
+            
         }
     }
 }
