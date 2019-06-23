@@ -21,35 +21,41 @@ namespace BlackJack
 
         public void StatInsert(string result)
         {
-            if(result == "Black Jack")
+            string gamerHand = gamer.Hand;
+            string dealerHand = null;
+            if (dealer.Hand != null)
             {
-                db.DbInsert("Win", gamer.Hand, dealer.Hand);
+                dealerHand = dealer.Hand;
+            }
+            if (result == "Black Jack")
+            {
+                db.DbInsert("Win", gamerHand, dealerHand);
                 db.DbInsert("StatResult", "Black Jack");
                 db.DbInsert("StatResult", "Win");
             }
             else if (result == "Win")
             {
-                db.DbInsert("Win", gamer.Hand, dealer.Hand);
+                db.DbInsert("Win", gamerHand, dealerHand);
                 db.DbInsert("StatResult", "Win");
             }
             else if (result == "Bust")
             {
-                db.DbInsert("Lose", gamer.Hand, dealer.Hand);
+                db.DbInsert("Lose", gamerHand, dealerHand);
                 db.DbInsert("StatResult", "Bust");
                 db.DbInsert("StatResult", "Lose");
             }
             else if (result == "Lose")
             {
-                db.DbInsert("Lose", gamer.Hand, dealer.Hand);
+                db.DbInsert("Lose", gamerHand, dealerHand);
                 db.DbInsert("StatResult", "Lose");
             }
             else
             {
-                db.DbInsert("Push", gamer.Hand, dealer.Hand);
+                db.DbInsert("Push", gamerHand, dealerHand);
                 db.DbInsert("StatResult", "Push");
             }
             string g = null;
-            foreach (char i in gamer.Hand)
+            foreach (char i in gamerHand)
             {
                 while(i != ' ')
                 {
@@ -68,7 +74,7 @@ namespace BlackJack
                     g = null;
                 }
             }
-            foreach (char i in dealer.Hand)
+            foreach (char i in dealerHand)
             {
                 while (i != ' ')
                 {

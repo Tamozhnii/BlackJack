@@ -25,28 +25,28 @@ namespace BlackJack
         public void DbInsert(string tab, string key)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            int a = int.Parse(CMD.CommandText = $"SELECT Count FROM {tab} WHERE ID = {key}");
-            int total = int.Parse(CMD.CommandText = $"SELECT Count FROM {tab} WHERE ID = TOTAL");
+            int a = int.Parse(CMD.CommandText = $"select Count from {tab} where ID = {key}");
+            int total = int.Parse(CMD.CommandText = $"select Count from {tab} where ID = TOTAL");
             a++;
             total++;
             int p = a / total * 100;
-            CMD.CommandText = $"INSERT INTO {tab}(Count) WHERE ID = {key} VALUES('{a}')";
-            CMD.CommandText = $"INSERT INTO {tab}(Count) WHERE ID = TOTAL VALUES('{total}')";
-            CMD.CommandText = $"INSERT INTO {tab}(Percent) WHERE ID = {key} VALUES('{p}')";
+            CMD.CommandText = $"insert into {tab}(Count) where ID = {key} values('{a}')";
+            CMD.CommandText = $"insert into {tab}(Count) where ID = TOTAL values('{total}')";
+            CMD.CommandText = $"insert into {tab}(Percent) where ID = {key} values('{p}')";
             CMD.ExecuteNonQuery();
         }
 
         public void DbInsert(string result, string gamerHand, string dealerHand)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"INSERT INTO GameRezult(Result, Hand, Dealer) VALUES('{result}','{gamerHand}','{dealerHand}')";
+            CMD.CommandText = $"insert into GameRezult(Result, Hand, Dealer) values('{result}','{gamerHand}','{dealerHand}')";
             CMD.ExecuteNonQuery();
         }
 
         public void DbStat(string tab)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"SELECT * FROM {tab}";
+            CMD.CommandText = $"select * from {tab}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
             while (Stat.Read())
             {
@@ -57,7 +57,7 @@ namespace BlackJack
         public void DbStat(int id)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"SELECT * FROM GameRezult WHERE ID = {id}";
+            CMD.CommandText = $"select * from GameRezult where ID = {id}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
             Console.WriteLine("Game " + Stat["ID"] + ": " + "Result: " + Stat["Result"] + "\n" + "Your hand: " + Stat["Hand"] + "\n" + "Dealer hand" + Stat["Dealer"]);
         }
