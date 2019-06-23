@@ -13,7 +13,7 @@ namespace BlackJack
         
         public BJDB()
         {
-            db = new SQLiteConnection("Data Source = BJDB.db; Version = 0");
+            db = new SQLiteConnection("Data Source = BJDB.db; Version = 3");
             db.Open();
         }
 
