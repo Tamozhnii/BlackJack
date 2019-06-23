@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SQLite;
 
 
 namespace BlackJack
@@ -19,7 +18,12 @@ namespace BlackJack
                 blackJack.Play();
                 blackJack.Answer("Play again?", out question);
             } while (question);
-            
+            bool stat;
+            blackJack.Answer("Show stat?", out stat);
+            if (stat == true)
+            {
+                
+            }
         }
     }
 }
