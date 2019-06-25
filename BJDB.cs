@@ -22,44 +22,59 @@ namespace BlackJack
             db.Close();
         }
 
-        public void DbInsert(string tab, string key)
+        public void DbInsert(string tab, int key)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            int a = int.Parse(CMD.CommandText = $"select Count from {tab} where ID = {key}");
-            int total = int.Parse(CMD.CommandText = $"select Count from {tab} where ID = TOTAL");
+            string selectID = $"SELECT Count FROM {tab} WHERE ID = {key}";
+            string selectTotal = $"SELECT Count FROM {tab} WHERE ID = 20";
+            int a;
+            using(SQLiteCommand command = new SQLiteCommand(selectID, db))
+            {
+                a = int.Parse(command.ExecuteScalar().ToString());
+            }
+            int total;
+            using (SQLiteCommand command = new SQLiteCommand(selectTotal, db))
+            {
+                total = int.Parse(command.ExecuteScalar().ToString());
+            }
             a++;
             total++;
             int p = a / total * 100;
-            CMD.CommandText = $"insert into {tab}(Count) where ID = {key} values('{a}')";
-            CMD.CommandText = $"insert into {tab}(Count) where ID = TOTAL values('{total}')";
-            CMD.CommandText = $"insert into {tab}(Percent) where ID = {key} values('{p}')";
+            CMD.CommandText = $"UPDATE {tab} SET Count = {a}, Percent = {p} WHERE ID = {key}; UPDATE {tab} SET Count = {total} WHERE ID = 20";
             CMD.ExecuteNonQuery();
+            //CMD.CommandText = $"UPDATE {tab} SET Count = {total} WHERE ID = 20";
+            //CMD.ExecuteNonQuery();
+            //CMD.CommandText = $"UPDATE {tab} SET Percent = {p} WHERE ID = {key}";
+            //CMD.ExecuteNonQuery();
         }
 
         public void DbInsert(string result, string gamerHand, string dealerHand)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"insert into GameRezult(Result, Hand, Dealer) values('{result}','{gamerHand}','{dealerHand}')";
+            CMD.CommandText = $"INSERT INTO GameRezult(Result, Hand, Dealer) VALUES('{result}','{gamerHand}','{dealerHand}')";
             CMD.ExecuteNonQuery();
         }
 
         public void DbStat(string tab)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"select * from {tab}";
+            CMD.CommandText = $"SELECT * FROM {tab}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
             while (Stat.Read())
             {
-                Console.WriteLine(Stat["ID"] + ": " + Stat["Count"] + ", " + Stat["Percent"] + " %");
+                Console.WriteLine(Stat[0] + ". " + Stat[1] + ": " + Stat[2] + ", " + Stat[3] + " %");
             }
+            Stat.Close();
+            Console.WriteLine();
         }
 
         public void DbStat(int id)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"select * from GameRezult where ID = {id}";
+            CMD.CommandText = $"SELECT * FROM GameRezult WHERE ID = {id}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
-            Console.WriteLine("Game " + Stat["ID"] + ": " + "Result: " + Stat["Result"] + "\n" + "Your hand: " + Stat["Hand"] + "\n" + "Dealer hand" + Stat["Dealer"]);
+            Console.WriteLine("Game " + Stat[0] + ": " + "Result: " + Stat[1] + "\n" + "Your hand: " + Stat[2] + "\n" + "Dealer hand" + Stat[3]);
+            Stat.Close();
         }
     }
 }

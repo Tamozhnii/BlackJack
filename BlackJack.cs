@@ -23,53 +23,71 @@ namespace BlackJack
         {
             string gamerHand = gamer.Hand;
             string dealerHand = null;
-            if (dealer.Hand != null)
+            if (dealer != null)
             {
                 dealerHand = dealer.Hand;
             }
             if (result == "Black Jack")
             {
                 db.DbInsert("Win", gamerHand, dealerHand);
-                db.DbInsert("StatResult", "Black Jack");
-                db.DbInsert("StatResult", "Win");
+                db.DbInsert("StatResult", 1);
+                db.DbInsert("StatResult", 2);
             }
             else if (result == "Win")
             {
                 db.DbInsert("Win", gamerHand, dealerHand);
-                db.DbInsert("StatResult", "Win");
+                db.DbInsert("StatResult", 2);
             }
             else if (result == "Bust")
             {
                 db.DbInsert("Lose", gamerHand, dealerHand);
-                db.DbInsert("StatResult", "Bust");
-                db.DbInsert("StatResult", "Lose");
+                db.DbInsert("StatResult", 3);
+                db.DbInsert("StatResult", 4);
             }
             else if (result == "Lose")
             {
                 db.DbInsert("Lose", gamerHand, dealerHand);
-                db.DbInsert("StatResult", "Lose");
+                db.DbInsert("StatResult", 4);
             }
             else
             {
                 db.DbInsert("Push", gamerHand, dealerHand);
-                db.DbInsert("StatResult", "Push");
+                db.DbInsert("StatResult", 5);
             }
             string g = null;
+            int v = 0;
             foreach (char i in gamerHand)
             {
-                while(i != ' ')
+                while (i != ' ')
                 {
                     g += i;
                 }
-                if(g != null && (i == ' ' || i.ToString() == null))
+                if (g != null && (i == ' ' || i.ToString() == null))
                 {
-                    if(g.Length > 0 && g.Length <= 2)
+                    if (g.Length > 0 && g.Length <= 2)
                     {
-                        db.DbInsert("CardsValue", g);
+                        switch (g[0])
+                        {
+                            case 'A': v = 1; break;
+                            case 'J': v = 11; break;
+                            case 'D': v = 12; break;
+                            case 'K': v = 13; break;
+                            default: v = int.Parse(g);
+                                break;
+                        }
+                        db.DbInsert("CardsValue", v);
                     }
                     else
                     {
-                        db.DbInsert("CardsLear", g);
+                        switch (g)
+                        {
+                            case "Diamonds": v = 1; break;
+                            case "Hearts": v = 2; break;
+                            case "Spades": v = 3; break;
+                            case "Clubs": v = 4; break;
+                            default: break;
+                        }
+                        db.DbInsert("CardsLear", v);
                     }
                     g = null;
                 }
@@ -84,11 +102,29 @@ namespace BlackJack
                 {
                     if (g.Length > 0 && g.Length <= 2)
                     {
-                        db.DbInsert("CardsValue", g);
+                        switch (g[0])
+                        {
+                            case 'A': v = 1; break;
+                            case 'J': v = 11; break;
+                            case 'D': v = 12; break;
+                            case 'K': v = 13; break;
+                            default:
+                                v = int.Parse(g);
+                                break;
+                        }
+                        db.DbInsert("CardsValue", v);
                     }
                     else
                     {
-                        db.DbInsert("CardsLear", g);
+                        switch (g)
+                        {
+                            case "Diamonds": v = 1; break;
+                            case "Hearts": v = 2; break;
+                            case "Spades": v = 3; break;
+                            case "Clubs": v = 4; break;
+                            default: break;
+                        }
+                        db.DbInsert("CardsLear", v);
                     }
                     g = null;
                 }
