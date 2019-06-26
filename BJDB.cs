@@ -25,23 +25,24 @@ namespace BlackJack
         public void DbInsert(string tab, int key)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            string selectID = $"SELECT Count FROM {tab} WHERE ID = {key}";
+            string selectID = $"UPDATE {tab} SET Count = Count + 1, Perce WHERE ID = {key}";
             string selectTotal = $"SELECT Count FROM {tab} WHERE ID = 20";
-            int a;
+            //int a;
             using(SQLiteCommand command = new SQLiteCommand(selectID, db))
             {
-                a = int.Parse(command.ExecuteScalar().ToString());
+                //a = int.Parse(command.ExecuteScalar().ToString());
             }
-            int total;
+            //int total;
             using (SQLiteCommand command = new SQLiteCommand(selectTotal, db))
             {
-                total = int.Parse(command.ExecuteScalar().ToString());
+                //total = int.Parse(command.ExecuteScalar().ToString());
             }
-            a++;
-            total++;
-            int p = a / total * 100;
-            CMD.CommandText = $"UPDATE {tab} SET Count = {a}, Percent = {p} WHERE ID = {key}; UPDATE {tab} SET Count = {total} WHERE ID = 20";
-            CMD.ExecuteNonQuery();
+            //a++;
+            //total++;
+            //int p = a / total * 100;
+            //CMD.CommandText = $"UPDATE {tab} SET Count = {a}, Percent = {p} WHERE ID = {key}";
+            //CMD.CommandText = $"UPDATE { tab} SET Count = { total } WHERE ID = 20";
+            //CMD.ExecuteNonQuery();
             //CMD.CommandText = $"UPDATE {tab} SET Count = {total} WHERE ID = 20";
             //CMD.ExecuteNonQuery();
             //CMD.CommandText = $"UPDATE {tab} SET Percent = {p} WHERE ID = {key}";
