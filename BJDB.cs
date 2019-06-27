@@ -22,31 +22,38 @@ namespace BlackJack
             db.Close();
         }
 
-        public void DbInsert(string tab, int key)
+        public void DbUpdate(string tab, int key)
         {
             SQLiteCommand CMD = db.CreateCommand();
-            string selectID = $"UPDATE {tab} SET Count = Count + 1, Perce WHERE ID = {key}";
-            string selectTotal = $"SELECT Count FROM {tab} WHERE ID = 20";
-            //int a;
-            using(SQLiteCommand command = new SQLiteCommand(selectID, db))
+            string updateCount = $"UPDATE {tab} SET Count = (Count + 1) WHERE ID = {key}";
+            string updateTotal = $"UPDATE {tab} SET Count = (Count + 1) WHERE ID = 20";
+            CMD.CommandText = updateCount;
+            CMD.ExecuteNonQuery();
+            CMD.CommandText = updateTotal;
+            CMD.ExecuteNonQuery();
+        }
+
+        public void DbUpdate()
+        {
+            SQLiteCommand CMD = db.CreateCommand();
+            for (int i = 1; i < 5; i++)
             {
-                //a = int.Parse(command.ExecuteScalar().ToString());
+                string updatePercent = $"UPDATE CardsLear SET Percent = ((SELECT Count FROM CardsLear WHERE ID = {i}) / (SELECT Count FROM CardsLear WHERE ID = 20) * 100) WHERE ID = {i}";
+                CMD.CommandText = updatePercent;
+                CMD.ExecuteNonQuery();
             }
-            //int total;
-            using (SQLiteCommand command = new SQLiteCommand(selectTotal, db))
+            for (int j = 1; j < 14; j++)
             {
-                //total = int.Parse(command.ExecuteScalar().ToString());
+                string updatePercent = $"UPDATE CardsValue SET Percent = ((SELECT Count FROM CardsValue WHERE ID = {j}) / (SELECT Count FROM CardsValue WHERE ID = 20) * 100) WHERE ID = {j}";
+                CMD.CommandText = updatePercent;
+                CMD.ExecuteNonQuery();
             }
-            //a++;
-            //total++;
-            //int p = a / total * 100;
-            //CMD.CommandText = $"UPDATE {tab} SET Count = {a}, Percent = {p} WHERE ID = {key}";
-            //CMD.CommandText = $"UPDATE { tab} SET Count = { total } WHERE ID = 20";
-            //CMD.ExecuteNonQuery();
-            //CMD.CommandText = $"UPDATE {tab} SET Count = {total} WHERE ID = 20";
-            //CMD.ExecuteNonQuery();
-            //CMD.CommandText = $"UPDATE {tab} SET Percent = {p} WHERE ID = {key}";
-            //CMD.ExecuteNonQuery();
+            for (int g = 1; g <= 5; g++)
+            {
+                string updatePercent = $"UPDATE StatResult SET Percent = ((SELECT Count FROM StatResult WHERE ID = {g}) / (SELECT Count FROM StatResult WHERE ID = 20) * 100) WHERE ID = {g}";
+                CMD.CommandText = updatePercent;
+                CMD.ExecuteNonQuery();
+            }
         }
 
         public void DbInsert(string result, string gamerHand, string dealerHand)
@@ -74,7 +81,10 @@ namespace BlackJack
             SQLiteCommand CMD = db.CreateCommand();
             CMD.CommandText = $"SELECT * FROM GameRezult WHERE ID = {id}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
-            Console.WriteLine("Game " + Stat[0] + ": " + "Result: " + Stat[1] + "\n" + "Your hand: " + Stat[2] + "\n" + "Dealer hand" + Stat[3]);
+            while (Stat.Read())
+            {
+                Console.WriteLine("Game " + Stat[0] + ": " + "Result: " + Stat[1] + "\n" + "Your hand: " + Stat[2] + "\n" + "Dealer hand" + Stat[3]);
+            }
             Stat.Close();
         }
     }

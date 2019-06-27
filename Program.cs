@@ -22,7 +22,9 @@ namespace BlackJack
             blackJack.Answer("Show stat?", out stat);
             if (stat == true)
             {
+                blackJack.DbUpdate();
                 blackJack.StatDB();
+                Console.ReadKey();
             }
             blackJack.CloseDB();
         }
