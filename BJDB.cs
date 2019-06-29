@@ -38,19 +38,19 @@ namespace BlackJack
             SQLiteCommand CMD = db.CreateCommand();
             for (int i = 1; i < 5; i++)
             {
-                string updatePercent = $"UPDATE CardsLear SET Percent = ((SELECT Count FROM CardsLear WHERE ID = {i}) / (SELECT Count FROM CardsLear WHERE ID = 20) * 100) WHERE ID = {i}";
+                string updatePercent = $"UPDATE CardsLear SET Percent = (100 * (SELECT \"Count\" FROM CardsLear WHERE ID = {i}) / (SELECT \"Count\" FROM CardsLear WHERE ID = 20)) WHERE ID = {i}";
                 CMD.CommandText = updatePercent;
                 CMD.ExecuteNonQuery();
             }
             for (int j = 1; j < 14; j++)
             {
-                string updatePercent = $"UPDATE CardsValue SET Percent = ((SELECT Count FROM CardsValue WHERE ID = {j}) / (SELECT Count FROM CardsValue WHERE ID = 20) * 100) WHERE ID = {j}";
+                string updatePercent = $"UPDATE CardsValue SET Percent = (100 * (SELECT \"Count\" FROM CardsValue WHERE ID = {j}) / (SELECT \"Count\" FROM CardsValue WHERE ID = 20)) WHERE ID = {j}";
                 CMD.CommandText = updatePercent;
                 CMD.ExecuteNonQuery();
             }
             for (int g = 1; g <= 5; g++)
             {
-                string updatePercent = $"UPDATE StatResult SET Percent = ((SELECT Count FROM StatResult WHERE ID = {g}) / (SELECT Count FROM StatResult WHERE ID = 20) * 100) WHERE ID = {g}";
+                string updatePercent = $"UPDATE StatResult SET Percent = (100 * (SELECT \"Count\" FROM StatResult WHERE ID = {g}) / (SELECT \"Count\" FROM StatResult WHERE ID = 20)) WHERE ID = {g}";
                 CMD.CommandText = updatePercent;
                 CMD.ExecuteNonQuery();
             }
