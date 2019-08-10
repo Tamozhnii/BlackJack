@@ -14,6 +14,7 @@ namespace BlackJack
         Dealer dealer;
         BJDB db;
         static BJDB bd = new BJDB();
+        static Task task;
         
         public BlackJack()
         {
@@ -106,7 +107,8 @@ namespace BlackJack
             db.DbStat("CardsValue");
             db.DbStat("StatResult");
             Console.WriteLine("What game number are you want to see?");
-            int a = int.Parse(Console.ReadLine());
+            int a = 0;
+            int.TryParse(Console.ReadLine(), out a);
             db.DbStat(a);
         }
         public void CloseDB()
@@ -147,7 +149,8 @@ namespace BlackJack
         public static string TakeCardFromDeck()
         {
             string card = deck.GetCard();
-            InsertStat(card);
+            task = Task.Factory.StartNew(() => InsertStat(card));
+            //InsertStat(card);
             return card;
         }
 
@@ -159,8 +162,9 @@ namespace BlackJack
             ShowHands(gamer);
             if (gamer.Sum == 21)
             {
-                StatInsert("Black Jack");
                 Console.WriteLine("Black Jack, You WIN!");
+                task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
+                //StatInsert("Black Jack");
                 Console.ReadKey();
             }
             else
@@ -175,8 +179,9 @@ namespace BlackJack
                     }
                     if (gamer.Sum > 21)
                     {
-                        StatInsert("Bust");
                         Console.WriteLine("Bust! You lose");
+                        task = Task.Factory.StartNew(() => StatInsert("Bust"));
+                        //StatInsert("Bust");
                         break;
                     }
                     else if (gamer.Sum == 21)
@@ -192,26 +197,30 @@ namespace BlackJack
                     if (dealer.Sum > 21)
                     {
                         ShowHands(dealer);
-                        StatInsert("Win");
                         Console.WriteLine("You win!");
+                        task = Task.Factory.StartNew(() => StatInsert("Win"));
+                        //StatInsert("Win");
                     }
                     else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
                     {
                         ShowHands(dealer);
-                        StatInsert("Lose");
                         Console.WriteLine("Dealer wins, you lose");
+                        task = Task.Factory.StartNew(() => StatInsert("Lose"));
+                        //StatInsert("Lose");
                     }
                     else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
                     {
                         ShowHands(dealer);
-                        StatInsert("Win");
                         Console.WriteLine("You Win!");
+                        task = Task.Factory.StartNew(() => StatInsert("Win"));
+                        //StatInsert("Win");
                     }
                     else
                     {
                         ShowHands(dealer);
-                        StatInsert("Push");
                         Console.WriteLine("Push!");
+                        task = Task.Factory.StartNew(() => StatInsert("Push"));
+                        //StatInsert("Push");
                     }
                 }
             }
