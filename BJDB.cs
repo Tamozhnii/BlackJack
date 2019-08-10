@@ -70,7 +70,7 @@ namespace BlackJack
             SQLiteDataReader Stat = CMD.ExecuteReader();
             while (Stat.Read())
             {
-                Console.WriteLine(Stat[0] + ". " + Stat[1] + ": " + Stat[2] + ", " + Stat[3] + " %");
+                Console.WriteLine(Stat[0] + ".\t" + Stat[1] + ":\t" + Stat[2] + ",\t" + Stat[3] + " %");
             }
             Stat.Close();
             Console.WriteLine();
@@ -83,7 +83,7 @@ namespace BlackJack
             SQLiteDataReader Stat = CMD.ExecuteReader();
             while (Stat.Read())
             {
-                Console.WriteLine("Game " + Stat[0] + ": " + "Result: " + Stat[1] + "\n" + "Your hand: " + Stat[2] + "\n" + "Dealer hand" + Stat[3]);
+                Console.WriteLine("Game " + Stat[0] + ": \t" + "Result: " + Stat[1] + "\n" + "Your hand: \t" + Stat[2] + "\n" + "Dealer hand: \t" + Stat[3]);
             }
             Stat.Close();
         }
