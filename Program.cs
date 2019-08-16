@@ -13,18 +13,22 @@ namespace BlackJack
         {
             BlackJack blackJack = new BlackJack();
             bool question;
-            do
+            blackJack.Answer("Play?", out question);
+            if (question)
             {
-                blackJack.Play();
-                blackJack.Answer("Play again?", out question);
-            } while (question);
-            bool stat = false;
+                do
+                {
+                    blackJack.Play();
+                    blackJack.Answer("Play again?", out question);
+                } while (question);
+            }
+            bool stat;
             blackJack.Answer("Show stat?", out stat);
-            if (stat == true)
+            if (stat)
             {
                 blackJack.DbUpdate();
                 blackJack.StatDB();
-                Console.ReadKey();
+                //Console.ReadKey();
             }
             blackJack.CloseDB();
         }

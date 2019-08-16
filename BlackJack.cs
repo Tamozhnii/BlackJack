@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using IBlackJack;
 
 namespace BlackJack
 {
@@ -141,10 +142,10 @@ namespace BlackJack
             }
             else Answer(question, out flag);
         }
-        void ShowHands(Gamer who)
+        string ShowHands(Gamer who)
         {
             string str = who.GetType() == typeof(Gamer) ? "Your" : "Dealers";
-            Console.WriteLine($"{str} hand: {who.Hand}, sum: {who.Sum}");
+            return $"{str} hand: {who.Hand}, sum: {who.Sum}";
         }
         public static string TakeCardFromDeck()
         {
@@ -154,7 +155,7 @@ namespace BlackJack
             return card;
         }
 
-        public void Play()
+        public string Play()
         {
             deck = new CardDeck();
             gamer = new Gamer();
@@ -162,10 +163,11 @@ namespace BlackJack
             ShowHands(gamer);
             if (gamer.Sum == 21)
             {
-                Console.WriteLine("Black Jack, You WIN!");
+                //Console.WriteLine("Black Jack, You WIN!");
                 task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
+                return ShowHands(gamer) + " Black Jack, You WIN!";
                 //StatInsert("Black Jack");
-                Console.ReadKey();
+                //Console.ReadKey();
             }
             else
             {
