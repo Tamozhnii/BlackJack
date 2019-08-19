@@ -16,7 +16,7 @@ namespace BlackJack
         BJDB db;
         static BJDB bd = new BJDB();
         static Task task;
-        
+
         public BlackJack()
         {
             db = new BJDB();
@@ -58,17 +58,18 @@ namespace BlackJack
                 db.DbUpdate("StatResult", 5);
             }
         }
+
         public static void InsertStat(string card)
         {
             int key = 0;
             string value = null;
             foreach (char i in card)
             {
-                if(i != ' ')
+                if (i != ' ')
                 {
                     value += i;
                 }
-                else if(value != null)
+                else if (value != null)
                 {
                     if (value.Length > 0 && value.Length <= 2)
                     {
@@ -98,74 +99,145 @@ namespace BlackJack
                 }
             }
         }
+
         public void DbUpdate()
         {
             db.DbUpdate();
         }
-        public void StatDB()
+
+        internal string[][] Stat() // 4.
         {
-            db.DbStat("CardsLear");
-            db.DbStat("CardsValue");
-            db.DbStat("StatResult");
-            Console.WriteLine("What game number are you want to see?");
-            int a = 0;
-            int.TryParse(Console.ReadLine(), out a);
-            db.DbStat(a);
+            string[][] stat = new string[3][];
+            stat.Append(db.DbStat("CardsLear"));
+            stat.Append(db.DbStat("CardsValue"));
+            stat.Append(db.DbStat("StatResult"));
+            return stat;
         }
-        public void CloseDB()
+
+        internal void CloseDB() //4.1
         {
             db.DbClose();
         }
 
-        public void Answer(string question, out bool flag)
+        internal void Replay(bool b) //5.
         {
-            string y = null;
-            Console.WriteLine(question);
-            y = Console.ReadLine();
-            if (y != "")
-            {
-                switch (y[0])
-                {
-                    case 'y':
-                    case 'Y':
-                        flag = true;
-                        break;
-                    case 'n':
-                    case 'N':
-                        flag = false;
-                        break;
-                    default:
-                        Console.WriteLine("Deafalt answer, try again");
-                        Answer(question, out flag);
-                        break;
-                }
-            }
-            else Answer(question, out flag);
+            if (b) Play();
         }
+
         string ShowHands(Gamer who)
         {
-            string str = who.GetType() == typeof(Gamer) ? "Your" : "Dealers";
-            return $"{str} hand: {who.Hand}, sum: {who.Sum}";
+            string str = who.GetType() == typeof(Gamer) ? "Player" : "Dealer";
+            return $"{str} {who.Hand} {who.Sum}";
         }
+
         public static string TakeCardFromDeck()
         {
             string card = deck.GetCard();
             task = Task.Factory.StartNew(() => InsertStat(card));
-            //InsertStat(card);
             return card;
         }
 
-        public string Play()
+        internal string Play() //1.
         {
             deck = new CardDeck();
             gamer = new Gamer();
             gamer.TakeCard();
-            ShowHands(gamer);
+            if (gamer.Sum == 21)
+            {
+                task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
+                return ShowHands(gamer) + " BJ";
+            }
+            return ShowHands(gamer) + " TC";
+        }
+
+        internal string MoreCard(bool b) //2.
+        {
+            if (Exit(this)) Exit(this);
+            string c = null;
+            if (b)
+            {
+                c = gamer.TakeCard();
+                if (gamer.Sum > 21)
+                {
+                    task = Task.Factory.StartNew(() => StatInsert("Bust"));
+                    return c + " RZB";
+                }
+                else if (gamer.Sum == 21)
+                {
+                    dealer = new Dealer();
+                    dealer.DealerPlay();
+                    if (dealer.Sum > 21)
+                    {
+                        task = Task.Factory.StartNew(() => StatInsert("Win"));
+                        return c + " " + ShowHands(dealer) + " WIN";
+                    }
+                    else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+                    {
+                        task = Task.Factory.StartNew(() => StatInsert("Lose"));
+                        return c + " " + ShowHands(dealer) + " LOSE";
+                    }
+                    else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+                    {
+                        task = Task.Factory.StartNew(() => StatInsert("Win"));
+                        return c + " " + ShowHands(dealer) + " WIN";
+                    }
+                    else
+                    {
+                        task = Task.Factory.StartNew(() => StatInsert("Push"));
+                        return c + " " + ShowHands(dealer) + " PUSH";
+                    }
+                }
+                else
+                {
+                    return c + " ANS";
+                }
+            }
+            else
+            {
+                dealer = new Dealer();
+                dealer.DealerPlay();
+                if (dealer.Sum > 21)
+                {
+                    task = Task.Factory.StartNew(() => StatInsert("Win"));
+                    return ShowHands(dealer) + " WIN";
+                }
+                else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+                {
+                    task = Task.Factory.StartNew(() => StatInsert("Lose"));
+                    return ShowHands(dealer) + " LOSE";
+                }
+                else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+                {
+                    task = Task.Factory.StartNew(() => StatInsert("Win"));
+                    return ShowHands(dealer) + " WIN";
+                }
+                else
+                {
+                    task = Task.Factory.StartNew(() => StatInsert("Push"));
+                    return ShowHands(dealer) + " PUSH";
+                }
+            }
+        }
+
+        internal bool Exit(BlackJack BJ) //3.
+        {
+            BJ.CloseDB();
+            BJ = null;
+            return true;
+        }
+
+        /*
+        public void Play()
+        {
+            deck = new CardDeck();
+            gamer = new Gamer();
+            gamer.TakeCard();
+            //ShowHands(gamer);
             if (gamer.Sum == 21)
             {
                 //Console.WriteLine("Black Jack, You WIN!");
                 task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
-                return ShowHands(gamer) + " Black Jack, You WIN!";
+                //ShowHands(gamer) + " Black Jack, You WIN!";
                 //StatInsert("Black Jack");
                 //Console.ReadKey();
             }
@@ -226,6 +298,6 @@ namespace BlackJack
                     }
                 }
             }
-        }
+        } */
     }
 }

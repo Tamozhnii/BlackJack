@@ -63,29 +63,33 @@ namespace BlackJack
             CMD.ExecuteNonQuery();
         }
 
-        public void DbStat(string tab)
+        public string[] DbStat(string tab)
         {
             SQLiteCommand CMD = db.CreateCommand();
             CMD.CommandText = $"SELECT * FROM {tab}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
+            string[] stat = new string[15];
+            int i = 0;
             while (Stat.Read())
             {
-                Console.WriteLine(Stat[0] + ".\t" + Stat[1] + ":\t" + Stat[2] + ",\t" + Stat[3] + " %");
+                stat[i] = Stat[0] + " " + Stat[1] + " " + Stat[2] + " " + Stat[3];
+                i++;
             }
             Stat.Close();
-            Console.WriteLine();
+            return stat;
+            //Console.WriteLine();
         }
 
-        public void DbStat(int id)
-        {
-            SQLiteCommand CMD = db.CreateCommand();
-            CMD.CommandText = $"SELECT * FROM GameRezult WHERE ID = {id}";
-            SQLiteDataReader Stat = CMD.ExecuteReader();
-            while (Stat.Read())
-            {
-                Console.WriteLine("Game " + Stat[0] + ": \t" + "Result: " + Stat[1] + "\n" + "Your hand: \t" + Stat[2] + "\n" + "Dealer hand: \t" + Stat[3]);
-            }
-            Stat.Close();
-        }
+        //public void DbStat(int id)
+        //{
+        //    SQLiteCommand CMD = db.CreateCommand();
+        //    CMD.CommandText = $"SELECT * FROM GameRezult WHERE ID = {id}";
+        //    SQLiteDataReader Stat = CMD.ExecuteReader();
+        //    while (Stat.Read())
+        //    {
+        //        Console.WriteLine("Game " + Stat[0] + ": \t" + "Result: " + Stat[1] + "\n" + "Your hand: \t" + Stat[2] + "\n" + "Dealer hand: \t" + Stat[3]);
+        //    }
+        //    Stat.Close();
+        //}
     }
 }

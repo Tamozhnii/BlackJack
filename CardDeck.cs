@@ -19,7 +19,7 @@ namespace BlackJack
             {
                 for (int j = 0; j < cardValue.Count(); j++)
                 {
-                    deck.Add(cardValue[j] + " " + cardSuit[i] + " ");
+                    deck.Add(cardValue[j] + " " + cardSuit[i]);
                 }
             }
         }

@@ -37,10 +37,12 @@ namespace BlackJack
             TakeCard();
         }
 
-        public void TakeCard()
+        public string TakeCard()
         {
-            hand.Add(BlackJack.TakeCardFromDeck());
+            string c = BlackJack.TakeCardFromDeck();
+            hand.Add(c);
             sum = GetCount();
+            return c;
         }
 
         public int GetCount()

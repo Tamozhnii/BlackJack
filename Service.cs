@@ -7,17 +7,32 @@ using IBlackJack;
 
 namespace BlackJack
 {
-    class Service : IContract
+    class Service : BlackJack, IContract
     {
-        public string Answer(string x)
+        public string IMoreCard(bool b)
         {
-            return x;
+            return MoreCard(b);
         }
 
-        //public string Play()
-        //{
-        //    BlackJack blackJack = new BlackJack();
-        //    return blackJack.Play();
-        //}
+        public string IPlay()
+        {
+            BlackJack blackJack = new BlackJack();
+            return blackJack.Play();
+        }
+
+        public string[][] IStat()
+        {
+            return Stat();
+        }
+
+        public void IReplay(bool b)
+        {
+            Replay(b);
+        }
+
+        public void IExit()
+        {
+            Exit(this as BlackJack);
+        }
     }
 }
