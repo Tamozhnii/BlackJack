@@ -63,17 +63,20 @@ namespace BlackJack
             CMD.ExecuteNonQuery();
         }
 
-        public void DbStat(string tab)
+        public string DbStat(string tab)
         {
+            string a = null;
             SQLiteCommand CMD = db.CreateCommand();
             CMD.CommandText = $"SELECT * FROM {tab}";
             SQLiteDataReader Stat = CMD.ExecuteReader();
             while (Stat.Read())
             {
                 Console.WriteLine(Stat[0] + ".\t" + Stat[1] + ":\t" + Stat[2] + ",\t" + Stat[3] + " %");
+                a += " " + Stat[0] + " " + Stat[1] + " " + Stat[2] + " " + Stat[3] + " end";
             }
             Stat.Close();
             Console.WriteLine();
+            return a;
         }
 
         public void DbStat(int id)
