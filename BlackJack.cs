@@ -101,15 +101,17 @@ namespace BlackJack
         {
             db.DbUpdate();
         }
-        public void StatDB()
+        public string StatDB()
         {
-            db.DbStat("CardsLear");
-            db.DbStat("CardsValue");
-            db.DbStat("StatResult");
-            Console.WriteLine("What game number are you want to see?");
-            int a = 0;
-            int.TryParse(Console.ReadLine(), out a);
-            db.DbStat(a);
+            string a = null;
+            a += db.DbStat("CardsLear");
+            a += db.DbStat("CardsValue");
+            a += db.DbStat("StatResult");
+            return a;
+            //Console.WriteLine("What game number are you want to see?");
+            //int a = 0;
+            //int.TryParse(Console.ReadLine(), out a);
+            //db.DbStat(a);
         }
         public void CloseDB()
         {
@@ -141,10 +143,11 @@ namespace BlackJack
             }
             else Answer(question, out flag);
         }
-        void ShowHands(Gamer who)
+        string ShowHands(Gamer who)
         {
             string str = who.GetType() == typeof(Gamer) ? "Your" : "Dealers";
             Console.WriteLine($"{str} hand: {who.Hand}, sum: {who.Sum}");
+            return $"{str} hand: {who.Hand}, sum: {who.Sum}";
         }
         public static string TakeCardFromDeck()
         {
@@ -154,7 +157,7 @@ namespace BlackJack
             return card;
         }
 
-        public void Play()
+        public string Play()
         {
             deck = new CardDeck();
             gamer = new Gamer();
@@ -166,27 +169,30 @@ namespace BlackJack
                 task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
                 //StatInsert("Black Jack");
                 Console.ReadKey();
+                return "Black Jack, You WIN!";
             }
             else
             {
+                string a = null;
                 bool flag = false;
                 do
                 {
                     if(flag)
                     {
                         gamer.TakeCard();
-                        ShowHands(gamer);
+                        a = ShowHands(gamer);
                     }
                     if (gamer.Sum > 21)
                     {
                         Console.WriteLine("Bust! You lose");
                         task = Task.Factory.StartNew(() => StatInsert("Bust"));
                         //StatInsert("Bust");
+                        a += "Bust! You lose";
                         break;
                     }
                     else if (gamer.Sum == 21)
                     {
-                        break;
+                        a += "Stop";
                     }
                     Answer("More card?", out flag);
                 } while (flag);
@@ -200,6 +206,7 @@ namespace BlackJack
                         Console.WriteLine("You win!");
                         task = Task.Factory.StartNew(() => StatInsert("Win"));
                         //StatInsert("Win");
+                        a += "You win!";
                     }
                     else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
                     {
@@ -207,6 +214,7 @@ namespace BlackJack
                         Console.WriteLine("Dealer wins, you lose");
                         task = Task.Factory.StartNew(() => StatInsert("Lose"));
                         //StatInsert("Lose");
+                        a += "Dealer wins, you lose";
                     }
                     else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
                     {
@@ -214,6 +222,7 @@ namespace BlackJack
                         Console.WriteLine("You Win!");
                         task = Task.Factory.StartNew(() => StatInsert("Win"));
                         //StatInsert("Win");
+                        a += "You Win!";
                     }
                     else
                     {
@@ -221,8 +230,10 @@ namespace BlackJack
                         Console.WriteLine("Push!");
                         task = Task.Factory.StartNew(() => StatInsert("Push"));
                         //StatInsert("Push");
+                        a += "Push!";
                     }
                 }
+                return a;
             }
         }
     }
