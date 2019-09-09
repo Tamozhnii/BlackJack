@@ -10,8 +10,8 @@ namespace BlackJack
 {
     public class BlackJack
     {
-        static CardDeck deck;
-        Gamer gamer;
+        static CardDeck deck = new CardDeck();
+        Gamer gamer = new Gamer();
         Dealer dealer;
         BJDB db;
         static BJDB bd = new BJDB();
@@ -114,115 +114,183 @@ namespace BlackJack
             return stat;
         }
 
-        internal void CloseDB() //4.1
-        {
-            db.DbClose();
-        }
-
-        internal void Replay(bool b) //5.
-        {
-            if (b) Play();
-        }
+        //internal void Replay(bool b) //5.
+        //{
+        //    if (b) S();
+        //}
 
         string ShowHands(Gamer who)
         {
-            string str = who.GetType() == typeof(Gamer) ? "Player" : "Dealer";
-            return $"{str} {who.Hand} {who.Sum}";
+            return $"{who.Hand}";
         }
 
-        public static string TakeCardFromDeck()
+        public string ShowHands()
         {
-            string card = deck.GetCard();
-            task = Task.Factory.StartNew(() => InsertStat(card));
+            return $"{gamer.Hand}";
+        }
+
+        public static int TakeCardFromDeck()
+        {
+            int card = deck.GetCard();
+            //task = Task.Factory.StartNew(() => InsertStat(card));
             return card;
         }
 
-        internal string Play() //1.
-        {
-            deck = new CardDeck();
-            gamer = new Gamer();
+        internal string Start() //1.
+        { 
+            gamer.TakeCard();
             gamer.TakeCard();
             if (gamer.Sum == 21)
             {
-                task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
-                return ShowHands(gamer) + " BJ";
+                //task = Task.Factory.StartNew(() => StatInsert("Black Jack"));
+                return ShowHands(gamer) + " 53";
             }
-            return ShowHands(gamer) + " TC";
+            return ShowHands(gamer);
         }
 
-        internal string MoreCard(bool b) //2.
+        internal string Answer(out bool b)
         {
-            if (Exit(this)) Exit(this);
             string c = null;
-            if (b)
+            c += gamer.TakeCard();
+            if (gamer.Sum > 21)
             {
-                c = gamer.TakeCard();
-                if (gamer.Sum > 21)
-                {
-                    task = Task.Factory.StartNew(() => StatInsert("Bust"));
-                    return c + " RZB";
-                }
-                else if (gamer.Sum == 21)
-                {
-                    dealer = new Dealer();
-                    dealer.DealerPlay();
-                    if (dealer.Sum > 21)
-                    {
-                        task = Task.Factory.StartNew(() => StatInsert("Win"));
-                        return c + " " + ShowHands(dealer) + " WIN";
-                    }
-                    else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
-                    {
-                        task = Task.Factory.StartNew(() => StatInsert("Lose"));
-                        return c + " " + ShowHands(dealer) + " LOSE";
-                    }
-                    else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
-                    {
-                        task = Task.Factory.StartNew(() => StatInsert("Win"));
-                        return c + " " + ShowHands(dealer) + " WIN";
-                    }
-                    else
-                    {
-                        task = Task.Factory.StartNew(() => StatInsert("Push"));
-                        return c + " " + ShowHands(dealer) + " PUSH";
-                    }
-                }
-                else
-                {
-                    return c + " ANS";
-                }
+                //task = Task.Factory.StartNew(() => StatInsert("Bust"));
+                b = false;
+                return c + " 54";
             }
-            else
+            else if (gamer.Sum == 21)
             {
                 dealer = new Dealer();
                 dealer.DealerPlay();
                 if (dealer.Sum > 21)
                 {
-                    task = Task.Factory.StartNew(() => StatInsert("Win"));
-                    return ShowHands(dealer) + " WIN";
+                    //task = Task.Factory.StartNew(() => StatInsert("Win"));
+                    b = false;
+                    return c + " D " + ShowHands(dealer) + " 55";
                 }
                 else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
                 {
-                    task = Task.Factory.StartNew(() => StatInsert("Lose"));
-                    return ShowHands(dealer) + " LOSE";
+                    //task = Task.Factory.StartNew(() => StatInsert("Lose"));
+                    b = false;
+                    return c + " D " + ShowHands(dealer) + " 56";
                 }
                 else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
                 {
-                    task = Task.Factory.StartNew(() => StatInsert("Win"));
-                    return ShowHands(dealer) + " WIN";
+                    //task = Task.Factory.StartNew(() => StatInsert("Win"));
+                    b = false;
+                    return c + " D " + ShowHands(dealer) + " 55";
                 }
                 else
                 {
-                    task = Task.Factory.StartNew(() => StatInsert("Push"));
-                    return ShowHands(dealer) + " PUSH";
+                    //task = Task.Factory.StartNew(() => StatInsert("Push"));
+                    b = false;
+                    return c + " D " + ShowHands(dealer) + " 57";
                 }
+            }
+            else
+            {
+                b = true;
+                return c + " 58";
             }
         }
 
-        internal bool Exit(BlackJack BJ) //3.
+        internal string Answer()
         {
-            BJ.CloseDB();
-            BJ = null;
+            dealer = new Dealer();
+            dealer.DealerPlay();
+            if (dealer.Sum > 21)
+            {
+                //task = Task.Factory.StartNew(() => StatInsert("Win"));
+                return "D " + ShowHands(dealer) + " 55";
+            }
+            else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+            {
+                //task = Task.Factory.StartNew(() => StatInsert("Lose"));
+                return "D " + ShowHands(dealer) + " 56";
+            }
+            else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+            {
+                //task = Task.Factory.StartNew(() => StatInsert("Win"));
+                return "D " + ShowHands(dealer) + " 55";
+            }
+            else
+            {
+                //task = Task.Factory.StartNew(() => StatInsert("Push"));
+                return "D " + ShowHands(dealer) + " 57";
+            }
+        }
+
+        //internal string Play(bool b) //2.
+        //{
+        //    string c = null;
+        //    if (b)
+        //    {
+        //        c += gamer.TakeCard();
+        //        if (gamer.Sum > 21)
+        //        {
+        //            //task = Task.Factory.StartNew(() => StatInsert("Bust"));
+        //            return c + " 54";
+        //        }
+        //        else if (gamer.Sum == 21)
+        //        {
+        //            dealer = new Dealer();
+        //            dealer.DealerPlay();
+        //            if (dealer.Sum > 21)
+        //            {
+        //                //task = Task.Factory.StartNew(() => StatInsert("Win"));
+        //                return c + " D " + ShowHands(dealer) + " 55";
+        //            }
+        //            else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+        //            {
+        //                //task = Task.Factory.StartNew(() => StatInsert("Lose"));
+        //                return c + " D " + ShowHands(dealer) + " 56";
+        //            }
+        //            else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+        //            {
+        //                //task = Task.Factory.StartNew(() => StatInsert("Win"));
+        //                return c + " D " + ShowHands(dealer) + " 55";
+        //            }
+        //            else
+        //            {
+        //                //task = Task.Factory.StartNew(() => StatInsert("Push"));
+        //                return c + " D " + ShowHands(dealer) + " 57";
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return c + " 58";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        dealer = new Dealer();
+        //        dealer.DealerPlay();
+        //        if (dealer.Sum > 21)
+        //        {
+        //            //task = Task.Factory.StartNew(() => StatInsert("Win"));
+        //            return c + " D " + ShowHands(dealer) + " 55";
+        //        }
+        //        else if (dealer.Sum <= 21 && dealer.Sum > gamer.Sum)
+        //        {
+        //            //task = Task.Factory.StartNew(() => StatInsert("Lose"));
+        //            return c + " D " + ShowHands(dealer) + " 56";
+        //        }
+        //        else if (dealer.Sum < 21 && dealer.Sum < gamer.Sum)
+        //        {
+        //            //task = Task.Factory.StartNew(() => StatInsert("Win"));
+        //            return c + " D " + ShowHands(dealer) + " 55";
+        //        }
+        //        else
+        //        {
+        //            //task = Task.Factory.StartNew(() => StatInsert("Push"));
+        //            return c + " D " + ShowHands(dealer) + " 57";
+        //        }
+        //    }
+        //}
+
+        internal bool Exit() //3.
+        {
+            db.DbClose();
             return true;
         }
 

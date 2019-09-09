@@ -8,26 +8,20 @@ namespace BlackJack
 {
     class CardDeck
     {
-        List<string> deck = new List<string>();
+        List<int> deck = new List<int>();
         Random random = new Random();
         
         public CardDeck()
         {
-            string[] cardSuit = new string[4] { "Hearts", "Diamonds", "Spades", "Clubs" };
-            string[] cardValue = new string[13] { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "D", "K" };
-            for (int i = 0; i < cardSuit.Count(); i++)
+            for(int i = 1; i <= 52; i++)
             {
-                for (int j = 0; j < cardValue.Count(); j++)
-                {
-                    deck.Add(cardValue[j] + " " + cardSuit[i]);
-                }
+                deck.Add(i);
             }
         }
-        public string GetCard()
+        public int GetCard()
         {
-            if(deck == null) deck = new List<string>();
-            int i = random.Next(deck.Count() - 1);
-            string card = deck[i];
+            int i = random.Next(1, deck.Count() - 1);
+            int card = deck[i];
             deck.RemoveAt(i);
             return card;
         }

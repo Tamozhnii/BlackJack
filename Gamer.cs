@@ -8,10 +8,9 @@ namespace BlackJack
 {
     public class Gamer
     {
-        List<string> hand;
+        List<int> hand;
         protected int sum;
         string myHand;
-        string card;
 
         public int Sum
         {
@@ -22,7 +21,7 @@ namespace BlackJack
             get
             {
                 myHand = "";
-                foreach (string v in hand)
+                foreach (int v in hand)
                 {
                     myHand += v + " ";
                 }
@@ -33,13 +32,12 @@ namespace BlackJack
         public Gamer()
         {
             sum = 0;
-            hand = new List<string>();
-            TakeCard();
+            hand = new List<int>();
         }
 
-        public string TakeCard()
+        public int TakeCard()
         {
-            string c = BlackJack.TakeCardFromDeck();
+            int c = BlackJack.TakeCardFromDeck();
             hand.Add(c);
             sum = GetCount();
             return c;
@@ -48,26 +46,31 @@ namespace BlackJack
         public int GetCount()
         {
             int sum1 = 0;
+
             for (int i = 0; i < hand.Count; i++)
             {
-                card = hand[i];
-                if (char.IsDigit(card[0]) is true && card[0] != '1')
+                for (int j = 0; j < 4; j += 13)
                 {
-                    sum1 += int.Parse(card[0].ToString());
-                }
-                else if (card[0] == 'A')
-                {
-                    sum1 += 11;
-                }
-                else
-                {
-                    sum1 += 10;
+                    if (hand[i] - j == 1)
+                    {
+                        sum1 += 11;
+                    }
+                    else if (hand[i] - j > 10 && hand[i] - j < 14)
+                    {
+                        sum1 += 10;
+                    }
+                    else if (hand[i] - j <= 10)
+                    {
+                        sum1 += hand[i];
+                    }
                 }
             }
             for (int j = 0; j < hand.Count; j++)
             {
-                string item = hand[j];
-                if (item[0] == 'A' && sum1 > 21) sum1 -= 10;
+                for (int i = 0; i < 4; i += 13)
+                {
+                    if (sum1 > 21 && hand[j] - i == 1) sum1 -= 10;
+                }
             }
             return sum1;
         }
