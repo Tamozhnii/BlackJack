@@ -15,7 +15,7 @@ namespace BlackJack
             return b.StatDB();
         }
 
-        bool Exit(out bool b)
+        bool Exit(bool b)
         {
             return b = true;
         }
@@ -27,9 +27,6 @@ namespace BlackJack
 
         static void Main(string[] args)
         {
-
-
-
             BlackJack blackJack = new BlackJack();
             bool question;
             do
